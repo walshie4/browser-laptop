@@ -107,6 +107,15 @@ const frameReducer = (state, action, immutableAction) => {
           state = state.setIn(['frames', index, 'lastAccessedTime'], new Date().getTime())
           state = state.deleteIn(['ui', 'tabs', 'previewTabPageIndex'])
           state = updateTabPageIndex(state, frame)
+        } else {
+          // preview the next frame index if updated tab
+          // is not active. This only wanted for tabs closed with
+          // mouse so only fired if hoverState is true
+          state = state.merge({
+            previewFrameKey: frame.get('hoverState')
+              ? frameStateUtil.getFrameIndex(state, index)
+              : null
+          })
         }
       }
       break
@@ -140,8 +149,11 @@ const frameReducer = (state, action, immutableAction) => {
         state = closeFrame(state, action)
 
         const frame = frameStateUtil.getActiveFrame(state)
+        const nextFrame = frameStateUtil.getNextFrame(state)
         if (frame) {
           appActions.tabActivateRequested(frame.get('tabId'))
+          // If a tab is closed then immediately preview the next frame
+          windowActions.setPreviewFrame(nextFrame.get('key'))
         }
       } else {
         appActions.closeWindow(getCurrentWindowId())
