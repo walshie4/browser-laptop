@@ -52,10 +52,15 @@ const closeFrame = (state, action) => {
 
   const nextFrame = frameStateUtil.getFrameByIndex(state, index)
 
-  // Copy the hover state if tab closed with mouse as long as we have a next frame
-  // This allow us to have closeTab button visible  for sequential frames closing, until onMouseLeave event happens.
-  if (hoverState && nextFrame) {
-    windowActions.setTabHoverState(nextFrame.get('key'), hoverState)
+  if (nextFrame) {
+    // After closing a tab, preview the next frame
+    // as long as there is one
+    windowActions.setPreviewFrame(nextFrame.get('key'))
+    // Copy the hover state if tab closed with mouse as long as we have a next frame
+    // This allow us to have closeTab button visible  for sequential frames closing, until onMouseLeave event happens.
+    if (hoverState) {
+      windowActions.setTabHoverState(nextFrame.get('key'), hoverState)
+    }
   }
 
   return state
@@ -107,15 +112,6 @@ const frameReducer = (state, action, immutableAction) => {
           state = state.setIn(['frames', index, 'lastAccessedTime'], new Date().getTime())
           state = state.deleteIn(['ui', 'tabs', 'previewTabPageIndex'])
           state = updateTabPageIndex(state, frame)
-        } else {
-          // preview the next frame index if updated tab
-          // is not active. This only wanted for tabs closed with
-          // mouse so only fired if hoverState is true
-          state = state.merge({
-            previewFrameKey: frame.get('hoverState')
-              ? frameStateUtil.getFrameIndex(state, index)
-              : null
-          })
         }
       }
       break
@@ -149,11 +145,8 @@ const frameReducer = (state, action, immutableAction) => {
         state = closeFrame(state, action)
 
         const frame = frameStateUtil.getActiveFrame(state)
-        const nextFrame = frameStateUtil.getNextFrame(state)
         if (frame) {
           appActions.tabActivateRequested(frame.get('tabId'))
-          // If a tab is closed then immediately preview the next frame
-          windowActions.setPreviewFrame(nextFrame.get('key'))
         }
       } else {
         appActions.closeWindow(getCurrentWindowId())
