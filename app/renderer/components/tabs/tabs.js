@@ -152,6 +152,7 @@ class Tabs extends ImmutableComponent {
                 frame={frame}
                 key={'tab-' + frame.get('key')}
                 paintTabs={this.props.paintTabs}
+                previewMode={this.props.previewMode}
                 previewTabs={this.props.previewTabs}
                 isActive={this.props.activeFrameKey === frame.get('key')}
                 onTabClosedWithMouse={this.onTabClosedWithMouse}

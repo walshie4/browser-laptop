@@ -851,6 +851,7 @@ class Main extends ImmutableComponent {
           paintTabs={getSetting(settings.PAINT_TABS)}
           shouldAllowWindowDrag={shouldAllowWindowDrag}
           dragData={this.props.appState.getIn(['dragData', 'type']) === dragTypes.TAB && this.props.appState.get('dragData')}
+          previewMode={this.props.windowState.getIn(['ui', 'tabs', 'previewMode'])}
           previewTabs={getSetting(settings.SHOW_TAB_PREVIEWS)}
           tabsPerTabPage={tabsPerPage}
           tabPageIndex={this.props.windowState.getIn(['ui', 'tabs', 'tabPageIndex'])}
