@@ -171,8 +171,10 @@ class Tab extends ImmutableComponent {
 
     if (this.props.previewTabs) {
       clearTimeout(this.mouseTimeout)
-      const tabAsRelatedTarget = /^tab_/i.test(e.relatedTarget.classList)
+      const tabComponents = /^tabArea_|^tab_|^tabTitle_|^tabId_|^icon_|^closeTab/i
+      const tabAsRelatedTarget = tabComponents.test(e.relatedTarget.classList)
 
+      console.log(e.relatedTarget.classList)
       // We are taking for granted that user hovering over another tab
       // means that he wants to sequentially preview a set of tabs,
       // so if previewMode was set by defined mouse idle time,
