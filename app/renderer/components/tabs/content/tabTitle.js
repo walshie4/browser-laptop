@@ -9,6 +9,7 @@ const {StyleSheet, css} = require('aphrodite/no-important')
 const ReduxComponent = require('../../reduxComponent')
 
 // State
+const frameStateUtil = require('../../../../../js/state/frameStateUtil')
 const tabContentState = require('../../../../common/state/tabContentState')
 
 // Utils
@@ -20,25 +21,57 @@ const globalStyles = require('../../styles/global')
 class TabTitle extends React.Component {
   mergeProps (state, ownProps) {
     const currentWindow = state.get('currentWindow')
+    const isPrivate = frameStateUtil.getFrameByKey(currentWindow, ownProps.frameKey).get('isPrivate')
     const tabIconColor = tabContentState.getTabIconColor(currentWindow, ownProps.frameKey)
+    const themeColor = tabContentState.getThemeColor(currentWindow, ownProps.frameKey)
+    const isActive = frameStateUtil.isFrameKeyActive(currentWindow, ownProps.frameKey)
+    const hoverState = frameStateUtil.getTabHoverState(currentWindow, ownProps.frameKey)
 
     const props = {}
     // used in renderer
     props.enforceFontVisibility = isDarwin() && tabIconColor === 'white'
     props.tabIconColor = tabIconColor
-    props.displayTitle = tabContentState.getDisplayTitle(currentWindow, ownProps.frameKey)
+//    props.tabBackgroundColor = isActive ? isPrivate ? 'transparent' : themeColor : hoverState ? globalStyles.color.chromePrimary : globalStyles.color.tabsBackgroundInactive
+//    props.tabBackgroundColor = isActive ? themeColor : globalStyles.color.tabsBackgroundInactive
 
+    props.tabBackgroundColor = (function () {
+      if (isActive) {
+        if (isPrivate) {
+          return globalStyles.color.privateTabBackgroundActive
+        }
+        return themeColor
+      } else {
+        if (isPrivate) {
+          return globalStyles.color.privateTabBackground
+        }
+        return globalStyles.color.tabsBackgroundInactive
+      }
+    }())
+
+    props.displayTitle = tabContentState.getDisplayTitle(currentWindow, ownProps.frameKey)
     // used in functions
     props.frameKey = ownProps.frameKey
 
     return props
   }
 
+  get tabBackgroundColor () {
+    return this.props.isActive ? this.props.themeColor : globalStyles.color.tabsBackgroundInactive
+  }
+
   render () {
     const titleStyles = StyleSheet.create({
       gradientText: {
-        backgroundImage: `-webkit-linear-gradient(left,
-        ${this.props.tabIconColor} 90%, ${globalStyles.color.almostInvisible} 100%)`
+        ':after': {
+          content: `''`,
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: '10%',
+          backgroundImage: `linear-gradient(to right, transparent, ${this.props.tabBackgroundColor})`
+        }
       }
     })
 
@@ -67,9 +100,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     lineHeight: '1.6',
-    padding: globalStyles.spacing.defaultTabPadding,
-    color: 'transparent',
-    WebkitBackgroundClip: 'text'
+    padding: globalStyles.spacing.defaultTabPadding
   },
 
   enforceFontVisibility: {
