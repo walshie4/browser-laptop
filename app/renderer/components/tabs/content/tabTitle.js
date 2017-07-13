@@ -25,14 +25,12 @@ class TabTitle extends React.Component {
     const tabIconColor = tabContentState.getTabIconColor(currentWindow, ownProps.frameKey)
     const themeColor = tabContentState.getThemeColor(currentWindow, ownProps.frameKey)
     const isActive = frameStateUtil.isFrameKeyActive(currentWindow, ownProps.frameKey)
-    const hoverState = frameStateUtil.getTabHoverState(currentWindow, ownProps.frameKey)
+    const isHovered = frameStateUtil.getTabHoverState(currentWindow, ownProps.frameKey)
 
     const props = {}
     // used in renderer
     props.enforceFontVisibility = isDarwin() && tabIconColor === 'white'
     props.tabIconColor = tabIconColor
-//    props.tabBackgroundColor = isActive ? isPrivate ? 'transparent' : themeColor : hoverState ? globalStyles.color.chromePrimary : globalStyles.color.tabsBackgroundInactive
-//    props.tabBackgroundColor = isActive ? themeColor : globalStyles.color.tabsBackgroundInactive
 
     props.tabBackgroundColor = (function () {
       if (isActive) {
@@ -42,7 +40,10 @@ class TabTitle extends React.Component {
         return themeColor
       } else {
         if (isPrivate) {
-          return globalStyles.color.privateTabBackground
+          return 'transparent'
+        }
+        if (isHovered) {
+          return globalStyles.color.chromePrimary
         }
         return globalStyles.color.tabsBackgroundInactive
       }
@@ -62,13 +63,14 @@ class TabTitle extends React.Component {
   render () {
     const titleStyles = StyleSheet.create({
       gradientText: {
+        color: this.props.tabIconColor,
         ':after': {
           content: `''`,
           display: 'block',
           position: 'absolute',
           top: 0,
           right: 0,
-          bottom: 0,
+          bottom: '2px',
           width: '10%',
           backgroundImage: `linear-gradient(to right, transparent, ${this.props.tabBackgroundColor})`
         }
