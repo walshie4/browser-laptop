@@ -1,9 +1,9 @@
 !include "MUI2.nsh"
 !include "LogicLib.nsh"
-!include "Win8WinVer.nsh"
-!include "GetParameters.nsh"
-!include "GetParent.nsh"
-!include "StrStr.nsh"
+!include "..\Win8WinVer.nsh"
+!include "..\GetParameters.nsh"
+!include "..\GetParent.nsh"
+!include "..\StrStr.nsh"
 
 !addplugindir "."
 !include "UAC.nsh"
@@ -14,7 +14,7 @@
 SilentInstall silent
 
 Name "Brave"
-OutFile "../Brave-win32-${ARCH}/resources/BraveDefaults.exe"
+OutFile "../../Brave-win32-${ARCH}/resources/BraveDefaults.exe"
 RequestExecutionLevel user
 Var BraveEXEPath
 Var BraveIconPath

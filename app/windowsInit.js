@@ -9,7 +9,25 @@ const spawn = childProcess.spawn
 const spawnSync = childProcess.spawnSync
 const execSync = childProcess.execSync
 const app = electron.app
-const appUserModelId = 'com.squirrel.brave.Brave'
+const Channel = require('./channel')
+let appUserModelId = 'com.squirrel.brave.Brave'
+switch (Channel.channel()) {
+  case 'nightly':
+    appUserModelId = 'com.squirrel.BraveNightly.BraveNightly'
+    break
+  case 'developer':
+    appUserModelId = 'com.squirrel.BraveDeveloper.BraveDeveloper'
+    break
+  case 'beta':
+    appUserModelId = 'com.squirrel.BraveBeta.BraveBeta'
+    break
+  case 'dev':
+    appUserModelId = 'com.squirrel.brave.Brave'
+    break
+  default:
+    appUserModelId = 'com.squirrel.brave.Brave'
+    break
+}
 
 const getBraveBinPath = () => {
   const appPath = app.getPath('exe')

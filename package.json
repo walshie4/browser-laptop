@@ -147,7 +147,7 @@
     "css-loader": "~0.28.7",
     "electron-builder": "^17.1.1",
     "electron-chromedriver": "^1.7.1",
-    "electron-packager": "brave/electron-packager",
+    "electron-packager": "brave/electron-packager#productDirName-overrides",
     "electron-prebuilt": "brave/electron-prebuilt",
     "empty-port": "0.0.2",
     "enzyme": "^2.9.1",
@@ -191,8 +191,8 @@
     "xml2js": "^0.4.15"
   },
   "optionalDependencies": {
-    "electron-installer-debian": "brave/electron-installer-debian",
-    "electron-installer-redhat": "brave/electron-installer-redhat"
+    "electron-installer-debian": "brave/electron-installer-debian#userDataDir-override",
+    "electron-installer-redhat": "brave/electron-installer-redhat#userDataDir-override"
   },
   "standard": {
     "global": [

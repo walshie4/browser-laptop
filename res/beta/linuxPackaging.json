@@ -1,8 +1,11 @@
 {
-  "productName": "Brave",
+  "name": "brave-beta",
+  "bin": "brave-beta",
+  "userDataDir": "brave-beta",
+  "productName": "Brave Beta",
   "genericName": "Web Browser",
   "homepage": "https://brave.com/",
-  "icon": "res/app.png",
+  "icon": "res/beta/app.png",
   "section": "web",
   "categories": [
     "Network",
@@ -38,6 +41,8 @@
     "libxtst6",
     "libxss1",
     "python",
-    "xdg-utils"
+    "xdg-utils",
+    "gir1.2-gnomekeyring-1.0",
+    "libgnome-keyring0"
   ]
 }
