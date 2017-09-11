@@ -63,7 +63,7 @@ Function .onInit
     ; They should also be in this block early because we always want to re-create on each update.
     WriteRegStr HKCU "SOFTWARE\Classes\BraveDeveloperHTML" "" "BraveDeveloper HTML Document"
     WriteRegStr HKCU "SOFTWARE\Classes\BraveDeveloperHTML\DefaultIcon" "" "$BraveIconPath"
-    WriteRegStr HKCU "SOFTWARE\Classes\BraveDeveloperHTML\shell\open\command" "" '"$BraveEXEPath" -- "%1"'
+    WriteRegStr HKCU "SOFTWARE\Classes\BraveDeveloperHTML\shell\open\command" "" '"$BraveEXEPath" "--user-data-dir=brave-developer" -- "%1"'
   ${EndIf}
 
   ; If we already have the defaults key, there's nothing to do so we can abort early without even needing to elevate on Win7.
@@ -118,7 +118,7 @@ Section "Defaults Section" SecDummy
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\Capabilities" "ApplicationDescription" "BraveDeveloper is the new and fast web browser that protects your privacy and security by blocking intrusive ads and trackers."
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\Capabilities" "ApplicationName" "BraveDeveloper"
     WriteRegDWORD SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\InstallInfo" "IconsVisible" 1
-    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\shell\open\command" "" ""
+    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\shell\open\command" "" "$BraveEXEPath"
     ; File associations
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\Capabilities\FileAssociations" ".htm" "BraveDeveloperHTML"
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveDeveloper\Capabilities\FileAssociations" ".html" "BraveDeveloperHTML"

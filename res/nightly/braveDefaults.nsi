@@ -65,7 +65,7 @@ Function .onInit
     ; They should also be in this block early because we always want to re-create on each update.
     WriteRegStr HKCU "SOFTWARE\Classes\BraveNightlyHTML" "" "Brave Nightly HTML Document"
     WriteRegStr HKCU "SOFTWARE\Classes\BraveNightlyHTML\DefaultIcon" "" "$BraveIconPath"
-    WriteRegStr HKCU "SOFTWARE\Classes\BraveNightlyHTML\shell\open\command" "" '"$BraveEXEPath" -- "%1"'
+    WriteRegStr HKCU "SOFTWARE\Classes\BraveNightlyHTML\shell\open\command" "" '"$BraveEXEPath" "--user-data-dir=brave-nightly" -- "%1"'
   ${EndIf}
 
   ; If we already have the defaults key, there's nothing to do so we can abort early without even needing to elevate on Win7.
@@ -120,7 +120,7 @@ Section "Defaults Section" SecDummy
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\Capabilities" "ApplicationDescription" "BraveNightly is the new and fast web browser that protects your privacy and security by blocking intrusive ads and trackers."
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\Capabilities" "ApplicationName" "BraveNightly"
     WriteRegDWORD SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\InstallInfo" "IconsVisible" 1
-    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\shell\open\command" "" ""
+    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\shell\open\command" "" "$BraveEXEPath"
     ; File associations
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\Capabilities\FileAssociations" ".htm" "BraveNightlyHTML"
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveNightly\Capabilities\FileAssociations" ".html" "BraveNightlyHTML"

@@ -118,7 +118,7 @@ Section "Defaults Section" SecDummy
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\Capabilities" "ApplicationDescription" "Brave is the new and fast web browser that protects your privacy and security by blocking intrusive ads and trackers."
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\Capabilities" "ApplicationName" "Brave"
     WriteRegDWORD SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\InstallInfo" "IconsVisible" 1
-    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\shell\open\command" "" ""
+    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\shell\open\command" "" "$BraveEXEPath"
     ; File associations
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\Capabilities\FileAssociations" ".htm" "BraveHTML"
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\Brave\Capabilities\FileAssociations" ".html" "BraveHTML"

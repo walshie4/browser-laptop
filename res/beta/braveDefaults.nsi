@@ -63,7 +63,7 @@ Function .onInit
     ; They should also be in this block early because we always want to re-create on each update.
     WriteRegStr HKCU "SOFTWARE\Classes\BraveBetaHTML" "" "BraveBeta HTML Document"
     WriteRegStr HKCU "SOFTWARE\Classes\BraveBetaHTML\DefaultIcon" "" "$BraveIconPath"
-    WriteRegStr HKCU "SOFTWARE\Classes\BraveBetaHTML\shell\open\command" "" '"$BraveEXEPath" -- "%1"'
+    WriteRegStr HKCU "SOFTWARE\Classes\BraveBetaHTML\shell\open\command" "" '"$BraveEXEPath" "--user-data-dir=brave-beta" -- "%1"'
   ${EndIf}
 
   ; If we already have the defaults key, there's nothing to do so we can abort early without even needing to elevate on Win7.
@@ -118,7 +118,7 @@ Section "Defaults Section" SecDummy
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\Capabilities" "ApplicationDescription" "BraveBeta is the new and fast web browser that protects your privacy and security by blocking intrusive ads and trackers."
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\Capabilities" "ApplicationName" "BraveBeta"
     WriteRegDWORD SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\InstallInfo" "IconsVisible" 1
-    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\shell\open\command" "" ""
+    WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\shell\open\command" "" "$BraveEXEPath"
     ; File associations
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\Capabilities\FileAssociations" ".htm" "BraveBetaHTML"
     WriteRegStr SHCTX "SOFTWARE\Clients\StartMenuInternet\BraveBeta\Capabilities\FileAssociations" ".html" "BraveBetaHTML"

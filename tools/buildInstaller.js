@@ -137,7 +137,7 @@ if (isDarwin) {
   }
 
   // sign for widevine
-  const wvExe = buildDir + '/Brave.exe'
+  const wvExe = buildDir + `/${appName}.exe`
   const wvPlugin = buildDir + '/WidevineCdm/_platform_specific/' + widevineCdmArch + '/widevinecdmadapter.dll'
   cmds = [
     getSignCmd(wvExe),
