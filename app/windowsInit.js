@@ -57,6 +57,7 @@ function CopyManifestFile () {
 if (process.platform === 'win32') {
   const shouldQuit = require('electron-squirrel-startup')
   const cmd = process.argv[1]
+  const channel = Channel.channel()
   if (cmd === '--squirrel-install' || cmd === '--squirrel-updated') {
     // The manifest file is used to customize the look of the Start menu tile.
     // This function copies it from the versioned folder to the parent folder
@@ -70,8 +71,18 @@ if (process.platform === 'win32') {
     spawnSync(getBraveDefaultsBinPath(), ['-uninstall'])
   }
 
-  if (shouldQuit(Channel.channel())) {
+  if (shouldQuit(channel)) {
     process.exit(0)
+  }
+
+  const userDataDirSwitch = '--user-data-dir=brave-' + channel
+  if (channel !== 'dev' && !process.argv.includes(userDataDirSwitch)) {
+    if (cmd === '--squirrel-firstrun') {
+      app.relaunch({args: [userDataDirSwitch, '--relaunch']})
+    } else {
+      app.relaunch({args: process.argv.slice(1) + [userDataDirSwitch, '--relaunch']})
+    }
+    app.quit()
   }
 }
 
