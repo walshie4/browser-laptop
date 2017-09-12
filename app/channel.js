@@ -25,7 +25,9 @@ exports.formattedChannel = () => {
 
   const channelMapping = {
     'dev': locale.translation('channelDev'),
-    'beta': locale.translation('channelBeta')
+    'beta': locale.translation('channelBeta'),
+    'developer': locale.translation('channelDeveloper'),
+    'nightly': locale.translation('channelNightly')
   }
   return Object.keys(channelMapping).includes(channel) ? channelMapping[channel] : channel
 }
