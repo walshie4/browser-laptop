@@ -13,6 +13,7 @@ const isTest = process.env.NODE_ENV === 'test'
 const buildConfig = require('./buildConfig')
 const isProduction = buildConfig.nodeEnv === 'production'
 const {fullscreenOption, autoplayOption} = require('../../app/common/constants/settingsEnums')
+const Channel = require('../../app/channel')
 
 module.exports = {
   name: 'Brave',
@@ -139,7 +140,7 @@ module.exports = {
     'general.show-home-button': false,
     'general.autohide-menu': true,
     'general.wide-url-bar': false,
-    'general.check-default-on-startup': true,
+    'general.check-default-on-startup': Channel.channel() === 'dev',
     'general.download-default-path': '',
     'general.download-always-ask': true,
     'search.default-search-engine': 'Google',

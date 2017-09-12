@@ -31,7 +31,3 @@ exports.formattedChannel = () => {
   }
   return Object.keys(channelMapping).includes(channel) ? channelMapping[channel] : channel
 }
-
-exports.browserLaptopRev = () => process.env.NODE_ENV === 'development'
-  ? require('git-rev-sync').long()
-  : config.BROWSER_LAPTOP_REV
