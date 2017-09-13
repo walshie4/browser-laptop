@@ -423,6 +423,24 @@ const handleAppAction = (action) => {
         appState = appState.setIn(['about', 'preferences', 'updatedStamp'], date)
       }
       break
+    case appConstants.APP_REMOVE_COOKIES:
+      {
+        const cookies = action.cookies
+        if (cookies) {
+          cookies.forEach((cookie, index) => {
+            let domain = cookie.get('domain', '')
+            if (domain.startsWith('.')) {
+              domain = domain.substring(1)
+            }
+            const url = `https://${domain}${cookie.get('path', '')}`
+            filtering.cookies.remove(url, cookie.get('name'), cookie.get('partition'))
+          })
+        } else {
+          // Remove all cookies
+          filtering.clearStorageData()
+        }
+        break
+      }
     case appConstants.APP_ON_CLEAR_BROWSING_DATA:
       const defaults = appState.get('clearBrowsingDataDefaults')
       const temp = appState.get('tempClearBrowsingData', Immutable.Map())

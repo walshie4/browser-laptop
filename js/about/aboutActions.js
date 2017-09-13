@@ -231,6 +231,13 @@ const aboutActions = {
     })
   },
 
+  removeCookies: function (cookies) {
+    aboutActions.dispatchAction({
+      actionType: appConstants.APP_REMOVE_COOKIES,
+      cookies
+    })
+  },
+
   setResourceEnabled: function (resourceName, enabled) {
     aboutActions.dispatchAction({
       actionType: appConstants.APP_SET_RESOURCE_ENABLED,

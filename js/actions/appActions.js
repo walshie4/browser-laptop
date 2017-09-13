@@ -1638,6 +1638,18 @@ const appActions = {
       destinationKey,
       prepend
     })
+  },
+
+  /**
+   * Removes cookies
+   * @param {Array.Object=} cookies - Cookies to remove or undefined if all
+   *  cookies should be removed
+   */
+  removeCookies: function (cookies) {
+    dispatch({
+      actionType: appConstants.APP_REMOVE_COOKIES,
+      cookies
+    })
   }
 }
 
