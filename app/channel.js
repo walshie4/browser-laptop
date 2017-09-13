@@ -24,7 +24,7 @@ exports.formattedChannel = () => {
   const locale = require('./locale')
 
   const channelMapping = {
-    'dev': locale.translation('channelDev'),
+    'dev': locale.translation('channelRelease'),
     'beta': locale.translation('channelBeta'),
     'developer': locale.translation('channelDeveloper'),
     'nightly': locale.translation('channelNightly')

@@ -259,8 +259,10 @@ var rendererIdentifiers = function () {
     'allowAutoplay',
     'autoplayMedia',
     // Release channels
-    'channelDev',
-    'channelBeta'
+    'channelRelease',
+    'channelBeta',
+    'channelDeveloper',
+    'channelNightly'
   ].concat(countryCodes)
 }
 
