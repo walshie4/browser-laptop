@@ -31,3 +31,24 @@ exports.formattedChannel = () => {
   }
   return Object.keys(channelMapping).includes(channel) ? channelMapping[channel] : channel
 }
+
+exports.getLinuxDesktopName = () => {
+  let desktopName
+  switch (channel) {
+    case 'dev':
+      desktopName = 'brave.desktop'
+      break
+    case 'beta':
+      desktopName = 'brave-beta.desktop'
+      break
+    case 'developer':
+      desktopName = 'brave-developer.desktop'
+      break
+    case 'nightly':
+      desktopName = 'brave-nightly.desktop'
+      break
+    default:
+      desktopName = 'brave.desktop'
+  }
+  return desktopName
+}
