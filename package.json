@@ -155,7 +155,7 @@
     "git-rev-sync": "^1.8.0",
     "gulp": "^3.9.0",
     "istanbul": "^1.1.0-alpha.1",
-    "joi": "^10.2.2",
+    "joi": "^11.0.3",
     "jsdom": "~11.2.0",
     "jsdom-global": "~3.0.2",
     "json-loader": "^0.5.4",
