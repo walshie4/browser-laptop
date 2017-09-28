@@ -180,9 +180,11 @@ const frameTabIdChanged = (state, action) => {
   let newFrameProps = new Immutable.Map()
   newFrameProps = newFrameProps.set('tabId', newTabId)
   const index = frameStateUtil.getFrameIndex(state, action.getIn(['frameProps', 'key']))
+
   state = state.mergeIn(['frames', index], newFrameProps)
   state = frameStateUtil.deleteTabInternalIndex(state, oldTabId)
   state = frameStateUtil.updateFramesInternalIndex(state, index)
+
   return state
 }
 
@@ -366,7 +368,8 @@ const doAction = (action) => {
           break
         }
         const frameIndex = frameStateUtil.getFrameIndex(windowState, action.frameKey)
-        if (frameIndex !== -1) {
+        const frameCountSize = windowState.get('frames').size
+        if (frameIndex > 0 && frameIndex < frameCountSize) {
           windowState = windowState.setIn(['frames', frameIndex, 'breakpoint'], action.breakpoint)
         }
         break

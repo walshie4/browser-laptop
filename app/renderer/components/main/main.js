@@ -543,11 +543,20 @@ class Main extends React.Component {
     props.showBookmarksToolbar = getSetting(settings.SHOW_BOOKMARKS_TOOLBAR)
     props.shouldAllowWindowDrag = windowState.shouldAllowWindowDrag(state, currentWindow, activeFrame, isFocused())
     props.isSinglePage = nonPinnedFrames.size <= tabsPerPage
+
+    // showTabPages should turn itself to FALSE
+    // and it DOES. We see the orange tab page indicator disappear
     props.showTabPages = nonPinnedFrames.size > tabsPerPage
+    // ------
+
     props.showNotificationBar = activeOrigin && state.get('notifications').filter((item) =>
         item.get('frameOrigin') ? activeOrigin === item.get('frameOrigin') : true).size > 0
     props.showFindBar = activeFrame.get('findbarShown') && !activeFrame.get('isFullScreen')
+
+    // BSC: this should be having the correct values?
+    // OR maybe active tab index is wrong??
     props.sortedFrames = frameStateUtil.getSortedFrameKeys(currentWindow)
+
     props.showDownloadBar = currentWindow.getIn(['ui', 'downloadsToolbar', 'isVisible']) &&
       state.get('downloads') && state.get('downloads').size > 0
     props.title = activeFrame.get('title')

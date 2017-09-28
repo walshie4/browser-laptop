@@ -17,6 +17,9 @@ class TabPages extends React.Component {
 
     const props = {}
     props.tabPageCount = frameStateUtil.getTabPageCount(currentWindow)
+    // BSC: this never gets fired saying tabPageCount=1; always stays as 2
+    // MAYBE this doesn't get fired because there's no more tab pages (only 1)
+    console.log('tabPageCount=' + props.tabPageCount)
 
     return props
   }
