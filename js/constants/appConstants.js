@@ -171,7 +171,8 @@ const appConstants = {
   APP_ON_LEDGER_RUN: _,
   APP_ON_NETWORK_CONNECTED: _,
   APP_ON_RESET_RECOVERY_STATUS: _,
-  APP_ON_LEDGER_INIT_READ: _
+  APP_ON_LEDGER_INIT_READ: _,
+  APP_ON_LEDGER_QR_GENERATED: _
 }
 
 module.exports = mapValuesByKeys(appConstants)

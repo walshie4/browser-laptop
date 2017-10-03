@@ -321,6 +321,11 @@ const ledgerReducer = (state, action, immutableAction) => {
         state = ledgerApi.onInitRead(state, action.parsedData)
         break
       }
+    case appConstants.APP_ON_LEDGER_QR_GENERATED:
+      {
+        state = ledgerState.saveQRCode(state, action.get('currency'), action.get('image'))
+        break
+      }
   }
   return state
 }

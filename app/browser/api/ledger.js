@@ -18,6 +18,7 @@ const urlFormat = require('url').format
 const levelUp = require('level')
 const random = require('random-lib')
 const uuid = require('uuid')
+const BigNumber = require('bignumber.js')
 
 // Actions
 const appActions = require('../../../js/actions/appActions')
@@ -1507,23 +1508,40 @@ const getStateInfo = (state, parsedData) => {
 
 const generatePaymentData = (state) => {
   const ledgerInfo = ledgerState.getInfoProps(state)
-  const paymentURL = `bitcoin:${ledgerInfo.get('address')}?amount=${ledgerInfo.get('bat')}&label=${encodeURI('Brave Software')}`
-  if (ledgerInfo.get('paymentURL') !== paymentURL) {
-    state = ledgerState.setInfoProp(state, 'paymentURL', paymentURL)
+
+  ledgerInfo.get('addresses', Immutable.List()).forEach((address, index) => {
+    if (ledgerInfo.hasIn(['walletQR', index])) {
+      return
+    }
+
+    let url = null
+    switch (index) {
+      case 'BAT':
+      case 'ETH':
+        url = `ethereum:${address}`
+        break
+      case 'BTC':
+        url = `bitcoin:${address}`
+        break
+      case 'LTC':
+        url = `litecoin:${address}`
+        break
+    }
+
     try {
       let chunks = []
-      qr.image(paymentURL, {type: 'png'})
+      qr.image(url, {type: 'png'})
         .on('data', (chunk) => {
           chunks.push(chunk)
         })
         .on('end', () => {
           const paymentIMG = 'data:image/png;base64,' + Buffer.concat(chunks).toString('base64')
-          state = ledgerState.setInfoProp(state, 'paymentIMG', paymentIMG)
+          appActions.onLedgerQRGenerated(index, paymentIMG)
         })
     } catch (ex) {
       console.error('qr.imageSync error: ' + ex.toString())
     }
-  }
+  })
 
   return state
 }
@@ -1560,15 +1578,10 @@ const getPaymentInfo = (state) => {
 
 const onWalletProperties = (state, body) => {
   let newInfo = {
-    buyURL: body.get('buyURL'),
-    buyURLExpires: body.get('buyURLExpires'),
     balance: body.get('balance'),
     unconfirmed: body.get('unconfirmed'),
-    satoshis: body.get('satoshis')
-  }
-
-  if (client) {
-    newInfo.address = client.getWalletAddress()
+    probi: body.get('probi'),
+    addresses: body.get('addresses')
   }
 
   state = ledgerState.mergeInfoProp(state, newInfo)
@@ -1578,11 +1591,15 @@ const onWalletProperties = (state, body) => {
   const amount = info.getIn(['bravery', 'fee', 'amount'])
   const currency = info.getIn(['bravery', 'fee', 'currency'])
 
-  if (amount && currency) {
-    const bodyCurrency = body.getIn(['rates', 'currency'])
-    if (bodyCurrency) {
-      const bat = (amount / bodyCurrency).toFixed(8)
-      state = ledgerState.setInfoProp(state, 'bat', bat)
+  if (currency) {
+    const rate = body.getIn(['rates', currency])
+    state = ledgerState.setInfoProp(state, 'currentRate', rate)
+
+    if (amount) {
+      if (rate) {
+        const converted = new BigNumber(newInfo.probi.toString()).times(new BigNumber(rate.toString())).toFixed(2)
+        state = ledgerState.setInfoProp(state, 'converted', converted)
+      }
     }
   }
 
@@ -1630,7 +1647,7 @@ const onBraveryProperties = (state, error, result) => {
   }
 
   if (result) {
-    muonWriter(pathName(statePath), result)
+    muonWriter(result)
   }
 
   return state
@@ -1639,15 +1656,15 @@ const onBraveryProperties = (state, error, result) => {
 const getBalance = (state) => {
   if (!client) return
 
-  const address = ledgerState.getInfoProp(state, 'address')
+  const paymentId = ledgerState.getInfoProp(state, 'paymentId')
   const balanceFn = getBalance.bind(null, state)
   balanceTimeoutId = setTimeout(balanceFn, 1 * miliseconds.minute)
-  if (!address) {
+  if (!paymentId) {
     return
   }
 
   if (!ledgerBalance) ledgerBalance = require('bat-balance')
-  ledgerBalance.getBalance(address, underscore.extend({balancesP: true}, client.options),
+  ledgerBalance.getBalance(paymentId, underscore.extend({balancesP: true}, client.options),
     (err, provider, result) => {
       if (err) {
         return console.warn('ledger balance warning: ' + JSON.stringify(err, null, 2))
@@ -1705,7 +1722,8 @@ const onCallback = (state, result, delayTime) => {
   let entries = client && client.report()
 
   if (!result) {
-    return run(state, delayTime)
+    run(state, delayTime)
+    return state
   }
 
   const regularResults = result.toJS()
@@ -1722,7 +1740,7 @@ const onCallback = (state, result, delayTime) => {
   state = cacheRuleSet(state, regularResults.ruleset)
   if (result.has('rulesetV2')) {
     results = regularResults.rulesetV2 // TODO optimize if possible
-    result = result.delete('rulesetV2')
+    delete regularResults.rulesetV2
 
     entries = []
     results.forEach((entry) => {
@@ -1753,7 +1771,7 @@ const onCallback = (state, result, delayTime) => {
 
   if (result.has('publishersV2')) {
     results = regularResults.publishersV2 // TODO optimize if possible
-    result = result.delete('publishersV2')
+    delete regularResults.publishersV2
 
     entries = []
     results.forEach((entry) => {
@@ -1776,7 +1794,7 @@ const onCallback = (state, result, delayTime) => {
     })
   }
 
-  muonWriter(pathName(statePath), regularResults)
+  muonWriter(regularResults)
   run(state, delayTime)
 
   return state
@@ -1901,7 +1919,7 @@ const onInitRead = (state, parsedData) => {
 
 const onTimeUntilReconcile = (state, stateResult) => {
   state = getStateInfo(stateResult)
-  muonWriter(pathName(statePath), stateResult)
+  muonWriter(stateResult)
 
   return state
 }
@@ -1986,7 +2004,7 @@ const run = (state, delayTime) => {
       const result = client.vote(winner)
       if (result) stateData = result
     })
-    if (stateData) muonWriter(pathName(statePath), stateData)
+    if (stateData) muonWriter(stateData)
   } catch (ex) {
     console.log('ledger client error(2): ' + ex.toString() + (ex.stack ? ('\n' + ex.stack) : ''))
   }
@@ -2054,7 +2072,8 @@ const onNetworkConnected = (state) => {
   balanceTimeoutId = setTimeout(newBalance, 5 * miliseconds.second)
 }
 
-const muonWriter = (path, payload) => {
+const muonWriter = (payload) => {
+  const path = pathName(statePath)
   muon.file.writeImportant(path, JSON.stringify(payload, null, 2), (success) => {
     if (!success) return console.error('write error: ' + path)
 

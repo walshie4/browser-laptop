@@ -1628,7 +1628,7 @@ const appActions = {
     })
   },
 
-  onChangeAddFundsDialogStep: function (page, currency = 'eth') {
+  onChangeAddFundsDialogStep: function (page, currency = 'bat') {
     dispatch({
       actionType: appConstants.APP_ON_CHANGE_ADD_FUNDS_DIALOG_STEP,
       page,
@@ -1703,6 +1703,14 @@ const appActions = {
     dispatch({
       actionType: appConstants.APP_ON_LEDGER_INIT_READ,
       parsedData
+    })
+  },
+
+  onLedgerQRGenerated: function (currency, image) {
+    dispatch({
+      actionType: appConstants.APP_ON_LEDGER_QR_GENERATED,
+      currency,
+      image
     })
   },
 

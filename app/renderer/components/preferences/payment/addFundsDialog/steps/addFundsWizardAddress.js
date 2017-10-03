@@ -2,8 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// Components
 const React = require('react')
+const {StyleSheet, css} = require('aphrodite')
+
+// Components
 const {GroupedFormTextbox} = require('../../../../common/textbox')
 const ClipboardButton = require('../../../../common/clipboardButton')
 
@@ -11,7 +13,6 @@ const ClipboardButton = require('../../../../common/clipboardButton')
 const appActions = require('../../../../../../../js/actions/appActions')
 
 // Styles
-const {StyleSheet, css} = require('aphrodite')
 const globalStyles = require('../../../../styles/global')
 const {addFundsDialogMinHeight} = require('../../../../styles/global').spacing
 const ethIcon = require('../../../../../../extensions/brave/img/ledger/cryptoIcons/ETH_icon.svg')
@@ -51,10 +52,10 @@ class AddFundsWizardAddress extends React.Component {
       <div
         className={css(
           styles.addFundsWizardAddress,
-          this.currency === 'eth' && styles.addFundsWizardAddress_eth,
-          this.currency === 'btc' && styles.addFundsWizardAddress_btc,
-          this.currency === 'ltc' && styles.addFundsWizardAddress_ltc,
-          this.currency === 'bat' && styles.addFundsWizardAddress_bat
+          this.currency === 'ETH' && styles.addFundsWizardAddress_eth,
+          this.currency === 'BTC' && styles.addFundsWizardAddress_btc,
+          this.currency === 'LTC' && styles.addFundsWizardAddress_ltc,
+          this.currency === 'BAT' && styles.addFundsWizardAddress_bat
       )}>
         <header data-l10n-id='addFundsWizardAddressHeader' />
         <div className={css(styles.addFundsWizardAddress__main)}>
